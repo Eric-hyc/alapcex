@@ -1,0 +1,11 @@
+error: failed to load manifest for workspace member `/storage/emulated/0/xinhao/share/floem/renderer`
+referenced by workspace at `/storage/emulated/0/xinhao/share/floem/Cargo.toml`
+
+Caused by:
+  failed to load manifest for dependency `floem-winit`
+
+Caused by:
+  failed to read `/storage/emulated/0/xinhao/share/winit/Cargo.toml`
+
+Caused by:
+  No such file or directory (os error 2)
