@@ -12,7 +12,7 @@ peniko = { workspace = true }
 resvg = { workspace = true }
 parley = { workspace = true }
 fontique = { workspace = true }
-# winit = { workspace = true }
+# winit = { path = "../../winit/winit", features = ["android-native-activity"], package = "floem-winit" }
 wgpu = { workspace = true }
 crossbeam = { version = "0.8", optional = true }
 futures = "0.3.32"
