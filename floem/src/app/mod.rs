@@ -107,7 +107,13 @@ pub enum AppEvent {
     Reopen { has_visible_windows: bool },
 }
 
+#[cfg(not(target_os = "android"))]
+#[cfg(not(target_os = "android"))]
 pub(crate) struct MenuWrapper(pub(crate) muda::Menu);
+#[cfg(target_os = "android")]
+pub(crate) struct MenuWrapper();
+#[cfg(target_os = "android")]
+pub(crate) struct MenuWrapper();
 // SAFETY: these unsafe wappers are needed so that we can send the muda memu.
 // The muda menu internally uses RC on a String ID and it's Vec of children.
 // This unsafe wrapper is memory safe but the race condition could potentially (unlikely)
@@ -283,6 +289,7 @@ impl Application {
         let handle = ApplicationHandle::new(config);
 
         #[cfg(any(target_os = "windows", target_os = "macos"))]
+        #[cfg(not(target_os = "android"))]
         muda::MenuEvent::set_event_handler(Some(move |event: muda::MenuEvent| {
             add_app_update_event(AppUpdateEvent::MenuAction {
                 action_id: event.id,

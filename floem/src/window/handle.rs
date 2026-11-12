@@ -12,6 +12,9 @@ use crate::platform::menu_types::{Menu as MudaMenu, MenuId};
 use crate::style::recalc::StyleReason;
 use crate::style::{StyleSelector, StyleSelectors};
 #[cfg(target_os = "windows")]
+#[cfg(not(target_os = "android"))]
+#[cfg(not(target_os = "android"))]
+#[cfg(not(target_os = "android"))]
 use muda::MenuTheme as MudaMenuTheme;
 
 use crate::platform::{Duration, Instant};
@@ -1481,6 +1484,8 @@ impl WindowHandle {
     #[cfg(target_os = "macos")]
     pub(crate) fn show_context_menu(&self, menu: MudaMenu, pos: Option<Point>) {
         use dispatch2::DispatchQueue;
+#[cfg(not(target_os = "android"))]
+        #[cfg(not(target_os = "android"))]
         use muda::{
             ContextMenu,
             dpi::{LogicalPosition, Position},
@@ -1518,6 +1523,8 @@ impl WindowHandle {
 
     #[cfg(target_os = "windows")]
     pub(crate) fn show_context_menu(&self, menu: MudaMenu, pos: Option<Point>) {
+#[cfg(not(target_os = "android"))]
+        #[cfg(not(target_os = "android"))]
         use muda::{
             ContextMenu,
             dpi::{LogicalPosition, Position},

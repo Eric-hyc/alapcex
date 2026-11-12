@@ -231,6 +231,7 @@ pub use floem_renderer::gpu_resources::GpuResources;
 pub use imbl;
 pub use layout::ScreenLayout;
 #[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_os = "android"))]
 pub use muda;
 pub use peniko;
 pub use peniko::kurbo;
