@@ -1,25 +1,50 @@
-#[cfg(not(target_os = "android"))]
 //! Platform-agnostic menu types.
 //!
 //! This module provides unified menu types that work across all platforms,
 //! using muda on native platforms and wasm_stubs on wasm32.
 
-#[cfg(not(target_arch = "wasm32"))]
-#[cfg(not(target_os = "android"))]
 #[cfg(not(target_os = "android"))]
 pub use muda::{
+    accelerator::Accelerator,
     CheckMenuItem, Icon, IconMenuItem, IsMenuItem, Menu, MenuId, MenuItem, NativeIcon,
-    PredefinedMenuItem, Submenu, accelerator::Accelerator,
+    PredefinedMenuItem, Submenu,
 };
-
-// MenuItemKind is only used in context_menu.rs, which is only compiled on Linux/FreeBSD/wasm32
-#[cfg(any(target_os = "linux", target_os = "freebsd"))]
-#[cfg(not(target_os = "android"))]
 #[cfg(not(target_os = "android"))]
 pub use muda::MenuItemKind;
 
-#[cfg(target_arch = "wasm32")]
-pub use crate::platform::wasm_stubs::{
-    Accelerator, CheckMenuItem, Icon, IconMenuItem, IsMenuItem, Menu, MenuId, MenuItem,
-    MenuItemKind, NativeIcon, PredefinedMenuItem, Submenu,
-};
+#[cfg(target_os = "android")]
+pub type MenuId = String;
+
+#[cfg(target_os = "android")]
+#[derive(Clone, Debug)]
+pub struct Menu;
+#[cfg(target_os = "android")]
+#[derive(Clone, Debug)]
+pub struct MenuItem;
+#[cfg(target_os = "android")]
+#[derive(Clone, Debug)]
+pub struct MenuItemKind;
+#[cfg(target_os = "android")]
+#[derive(Clone, Debug)]
+pub struct Submenu;
+#[cfg(target_os = "android")]
+#[derive(Clone, Debug)]
+pub struct PredefinedMenuItem;
+#[cfg(target_os = "android")]
+#[derive(Clone, Debug)]
+pub struct CheckMenuItem;
+#[cfg(target_os = "android")]
+#[derive(Clone, Debug)]
+pub struct IconMenuItem;
+#[cfg(target_os = "android")]
+#[derive(Clone, Debug)]
+pub struct Icon;
+#[cfg(target_os = "android")]
+#[derive(Clone, Debug)]
+pub struct NativeIcon;
+#[cfg(target_os = "android")]
+#[derive(Clone, Debug)]
+pub struct Accelerator;
+#[cfg(target_os = "android")]
+#[derive(Clone, Debug)]
+pub struct IsMenuItem;

@@ -106,20 +106,17 @@ pub enum AppEvent {
     WillTerminate,
     Reopen { has_visible_windows: bool },
 }
-
-#[cfg(not(target_os = "android"))]
 #[cfg(not(target_os = "android"))]
 pub(crate) struct MenuWrapper(pub(crate) muda::Menu);
+
 #[cfg(target_os = "android")]
 pub(crate) struct MenuWrapper();
-#[cfg(target_os = "android")]
-pub(crate) struct MenuWrapper();
-// SAFETY: these unsafe wappers are needed so that we can send the muda memu.
-// The muda menu internally uses RC on a String ID and it's Vec of children.
-// This unsafe wrapper is memory safe but the race condition could potentially (unlikely)
-// lead to bad reference counts and leaked memory.
-// I think this is fine for this case.
+
+#[cfg(not(target_os = "android"))]
+// SAFETY: these unsafe wrappers are needed so that we can send the muda memu.
 unsafe impl Send for MenuWrapper {}
+
+#[cfg(not(target_os = "android"))]
 unsafe impl Sync for MenuWrapper {}
 
 pub(crate) enum UserEvent {
