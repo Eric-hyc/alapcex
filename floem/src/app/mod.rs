@@ -108,9 +108,9 @@ pub enum AppEvent {
 }
 #[cfg(not(target_os = "android"))]
 pub(crate) struct MenuWrapper(pub(crate) muda::Menu);
-
 #[cfg(target_os = "android")]
 pub(crate) struct MenuWrapper();
+
 
 #[cfg(not(target_os = "android"))]
 // SAFETY: these unsafe wrappers are needed so that we can send the muda memu.
