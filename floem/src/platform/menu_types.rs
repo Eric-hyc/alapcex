@@ -45,6 +45,7 @@ pub struct NativeIcon;
 #[cfg(target_os = "android")]
 #[derive(Clone, Debug)]
 pub struct Accelerator;
+
+// 👇 这里是核心修复：把 struct 改成 trait
 #[cfg(target_os = "android")]
-#[derive(Clone, Debug)]
-pub struct IsMenuItem;
+pub trait IsMenuItem: std::fmt::Debug + Send + Sync {}
