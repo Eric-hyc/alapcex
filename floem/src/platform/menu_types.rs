@@ -49,3 +49,6 @@ pub struct Accelerator;
 // 👇 这里是核心修复：把 struct 改成 trait
 #[cfg(target_os = "android")]
 pub trait IsMenuItem: std::fmt::Debug + Send + Sync {}
+
+#[cfg(target_os = "android")]
+impl<T: std::fmt::Debug + Send + Sync> IsMenuItem for T {}

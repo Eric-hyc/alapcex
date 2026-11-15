@@ -198,6 +198,7 @@ pub use layout::responsive;
 /// Re-export file module from platform for backward compatibility.
 pub use platform::file;
 /// Re-export menu module from platform for backward compatibility.
+#[cfg(not(target_os = "android"))]
 pub use platform::menu;
 /// Re-export view_tuple module from view for backward compatibility.
 pub use view::tuple as view_tuple;

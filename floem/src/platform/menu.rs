@@ -1,3 +1,4 @@
+#![cfg(not(target_os = "android"))]
 use super::menu_types::{
     Accelerator, CheckMenuItem, Icon, IconMenuItem, IsMenuItem, MenuId, MenuItem as MudaMenuItem,
     NativeIcon, PredefinedMenuItem,

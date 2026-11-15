@@ -9,6 +9,7 @@ pub(crate) mod context_menu;
 pub mod file;
 #[cfg(not(target_arch = "wasm32"))]
 pub mod file_action;
+#[cfg(not(target_os = "android"))]
 pub mod menu;
 pub(crate) mod menu_types;
 pub(crate) mod time;
