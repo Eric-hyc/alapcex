@@ -13,9 +13,7 @@ pub struct Clipboard;
 
 #[cfg(not(target_os = "android"))]
 impl Clipboard {
-    pub fn init(_raw: raw_window_handle::RawDisplayHandle) {
-        // 桌面端原本的逻辑（先注释掉，防止依赖问题，若报错再恢复）
-    }
+    pub fn init(_raw: raw_window_handle::RawDisplayHandle) {}
     pub fn is_empty(&self) -> bool { true }
     pub fn get_contents(&self) -> Result<String, ClipboardError> { Ok(String::new()) }
     pub fn replace_region(&self, _content: &str) -> Result<(), ClipboardError> { Ok(()) }
@@ -24,9 +22,8 @@ impl Clipboard {
 
 #[cfg(target_os = "android")]
 impl Clipboard {
-    pub fn init() {
-        // Android 暂不需要初始化
-    }
+    // Android 下参数加个下划线，或者用原始参数类型，保持一致
+    pub fn init(_raw: raw_window_handle::RawDisplayHandle) {}
     pub fn is_empty(&self) -> bool { true }
     pub fn get_contents(&self) -> Result<String, ClipboardError> { Ok(String::new()) }
     pub fn replace_region(&self, _content: &str) -> Result<(), ClipboardError> { Ok(()) }
