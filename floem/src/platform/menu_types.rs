@@ -61,3 +61,12 @@ impl Menu {
 impl Submenu {
     pub fn new() -> Self { Self }
 }
+
+#[cfg(target_os = "android")]
+impl Menu {
+    pub fn new() -> Self { Self }
+}
+#[cfg(target_os = "android")]
+impl Submenu {
+    pub fn new() -> Self { Self }
+}
