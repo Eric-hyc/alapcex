@@ -3,7 +3,7 @@ use std::{cell::RefCell, collections::HashMap, time::Instant};
 use crate::{
     action::exec_after_animation_frame,
     inspector::CaptureState,
-    platform::menu_types::MenuId,
+    platform::menu::MenuId,
     style::{StyleCache, StyleSelectors, recalc::StyleReason},
     view::ViewStorage,
 };

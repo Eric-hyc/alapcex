@@ -8,7 +8,7 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
 };
 
-use crate::platform::menu_types::MenuId;
+use crate::platform::menu::MenuId;
 #[cfg(feature = "crossbeam")]
 use crossbeam::channel::{Receiver, Sender, unbounded as channel};
 use peniko::kurbo::Point;
