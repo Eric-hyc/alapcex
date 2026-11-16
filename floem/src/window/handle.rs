@@ -1218,6 +1218,7 @@ impl WindowHandle {
                         self.paint_state.set_scale(scale);
                     }
                     UpdateMessage::ShowContextMenu { menu, pos } => {
+                        #[cfg(not(target_os = "android"))]
                         let (menu, registry) = menu.build();
                         cx.window_state.context_menu.clear();
                         cx.window_state.update_context_menu(registry);
@@ -1231,6 +1232,7 @@ impl WindowHandle {
                     }
                     UpdateMessage::WindowMenu { menu } => {
                         self.window_menu_actions.clear();
+                        #[cfg(not(target_os = "android"))]
                         let (menu, registry) = menu.build();
                         self.window_menu_actions = registry;
                         #[cfg(target_os = "macos")]

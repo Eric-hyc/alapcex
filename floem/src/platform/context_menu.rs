@@ -1,3 +1,4 @@
+#![cfg(not(target_os = "android"))]
 //! Linux/FreeBSD context menu view implementation.
 //!
 //! This module provides a fallback context menu UI for platforms where

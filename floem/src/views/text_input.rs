@@ -833,6 +833,7 @@ impl TextInput {
                     let selection_txt = self
                         .buffer
                         .with_untracked(|buf| buf[selection.clone()].to_string());
+                    #[cfg(not(target_os = "android"))]
                     let _ = Clipboard::set_contents(selection_txt);
                 }
                 true
@@ -842,6 +843,7 @@ impl TextInput {
                     let selection_txt = self
                         .buffer
                         .with_untracked(|buf| buf[selection.clone()].to_string());
+                    #[cfg(not(target_os = "android"))]
                     let _ = Clipboard::set_contents(selection_txt);
 
                     self.buffer

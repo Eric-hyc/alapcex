@@ -10,9 +10,9 @@ pub struct Menu;
 #[cfg(target_os = "android")]
 impl Menu {
     pub fn new() -> Self { Self }
+    pub fn build(self) -> (Self, std::collections::HashMap<MenuId, MenuItem>) { (self, std::collections::HashMap::new()) }
     pub fn append(&self, _item: &dyn std::fmt::Debug) -> Result<(), ()> { Ok(()) }
     pub fn append_items(&self, _items: &[&dyn std::fmt::Debug]) -> Result<(), ()> { Ok(()) }
-    pub fn prepend(&self, _item: &dyn std::fmt::Debug) -> Result<(), ()> { Ok(()) }
 }
 
 #[cfg(target_os = "android")]
@@ -30,6 +30,7 @@ pub struct MenuItem;
 #[cfg(target_os = "android")]
 impl MenuItem {
     pub fn new(_text: &str, _accelerator: Option<String>) -> Self { Self }
+    pub fn id(&self) -> &MenuId { &String::new() }
 }
 
 #[cfg(target_os = "android")]
@@ -62,18 +63,12 @@ impl IconMenuItem {
 #[cfg(target_os = "android")]
 #[derive(Clone, Debug)]
 pub enum MenuItemKind {
-    Item,
-    Submenu,
-    Predefined,
-    Check,
-    Icon,
+    Item(MenuItem),
+    Submenu(Submenu),
+    Predefined(PredefinedMenuItem),
+    Check(CheckMenuItem),
+    Icon(IconMenuItem),
 }
-
-#[cfg(target_os = "android")]
-impl Menu {
-    pub fn build(self) -> Self { self }
-}
-
 #[cfg(target_os = "android")]
 impl std::fmt::Display for MenuItemKind {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
