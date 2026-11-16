@@ -11,7 +11,7 @@ use ui_events::keyboard::{Key, NamedKey};
 
 use crate::context::VisualChangedListener;
 use crate::event::listener;
-use crate::platform::menu::MudaMenu;
+use crate::platform::menu_types::MudaMenu;
 use crate::style::CursorStyle;
 
 use crate::platform::menu_types;
