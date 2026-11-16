@@ -105,3 +105,13 @@ impl Clipboard {
         };
     }
 }
+
+#[cfg(target_os = "android")]
+impl Clipboard {
+    pub fn is_empty(&self) -> bool { true }
+    pub fn replace_region(&self, _: &str) -> Result<(), ClipboardError> { Ok(()) }
+    pub fn get_contents(&self) -> Result<String, ClipboardError> { Ok(String::new()) }
+    pub fn write(&self, _: String) -> Result<(), ClipboardError> { Ok(()) }
+    pub fn read(&self) -> Result<String, ClipboardError> { Ok(String::new()) }
+    pub fn clear(&self) -> Result<(), ClipboardError> { Ok(()) }
+}

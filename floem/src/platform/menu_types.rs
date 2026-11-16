@@ -52,3 +52,12 @@ pub trait IsMenuItem: std::fmt::Debug + Send + Sync {}
 
 #[cfg(target_os = "android")]
 impl<T: std::fmt::Debug + Send + Sync> IsMenuItem for T {}
+
+#[cfg(target_os = "android")]
+impl Menu {
+    pub fn new() -> Self { Self }
+}
+#[cfg(target_os = "android")]
+impl Submenu {
+    pub fn new() -> Self { Self }
+}
