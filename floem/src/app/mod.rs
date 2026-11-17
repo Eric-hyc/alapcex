@@ -155,13 +155,13 @@ pub(crate) enum AppUpdateEvent {
     },
     ProfileWindow {
         window_id: WindowId,
-        end_profile: WriteSignal<Option<Rc<Profile>>>,
+        end_profile: Option<WriteSignal<Option<Rc<Profile>>>>,
     },
     RequestTimer {
         timer: Timer,
     },
     RequestAnimationTimer {
-        timer: TimerToken,
+        timer: Timer,
         window_id: WindowId,
     },
     CancelTimer {
@@ -189,14 +189,16 @@ pub(crate) fn add_app_update_event(event: AppUpdateEvent) {
 #[doc(hidden)]
 pub fn take_close_window_event_count(window_id: WindowId) -> usize {
     APP_UPDATE_EVENTS.with(|events| {
-        let mut count = 0;
-        events.borrow_mut().retain(|event| {
-            let matches = matches!(event, AppUpdateEvent::CloseWindow { window_id: id } if *id == window_id);
-            if matches {
-                count += 1;
-            }
-            !matches
-        });
+        let mut events = events.borrow_mut();
+        let count = events
+            .iter()
+            .filter(
+                |e| matches!(e, AppUpdateEvent::CloseWindow { window_id: id } if *id == window_id),
+            )
+            .count();
+        events.retain(
+            |e| !matches!(e, AppUpdateEvent::CloseWindow { window_id: id } if *id == window_id),
+        );
         count
     })
 }
