@@ -821,14 +821,18 @@ impl ApplicationHandle {
         self.fire_timer(event_loop);
     }
 
-    pub(crate) fn flush_deferred_context_menus(&mut self) {
+    #[cfg(not(target_os = "android"))]
+pub(crate) fn flush_deferred_context_menus(&mut self) {
         let pending = std::mem::take(&mut self.pending_context_menus);
         for item in pending {
-            if let Some(handle) = self.window_handles.get_mut(&item.window_id) 
-                //handle.show_context_menu(item.menu.0, item.pos);
+            if let Some(handle) = self.window_handles.get_mut(&item.window_id) {
+                handle.show_context_menu(item.menu.0, item.pos);
             }
         }
     }
+
+    #[cfg(target_os = "android")]
+    pub(crate) fn flush_deferred_context_menus(&mut self) {}
 }
 
 /// Sets up traffic light button constraints with precise pixel positioning.
