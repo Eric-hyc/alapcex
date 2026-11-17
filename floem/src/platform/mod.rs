@@ -4,6 +4,9 @@ pub mod file_action;
 pub mod time;
 pub mod wasm_stubs;
 
+#[cfg(target_os = "android")]
+pub mod android;
+
 pub use std::time::{Duration, Instant};
 pub use clipboard::{Clipboard, ClipboardError};
 pub use file::{FileDialogOptions, FileInfo, FileSpec};
