@@ -1219,21 +1219,21 @@ impl WindowHandle {
                     }
                     UpdateMessage::ShowContextMenu { menu, pos } => {
                         #[cfg(not(target_os = "android"))]
-                        let (menu, registry) = menu.build();
+                        // Disabled on Android
                         cx.window_state.context_menu.clear();
-                        cx.window_state.update_context_menu(registry);
+                        // Disabled on Android
 
                         // Queue the context menu to show after this event completes
                         Application::send_proxy_event(UserEvent::ShowContextMenu {
                             window_id: self.window_id,
-                            menu: MenuWrapper(menu),
+                            menu: MenuWrapper(),
                             pos,
                         });
                     }
                     UpdateMessage::WindowMenu { menu } => {
                         self.window_menu_actions.clear();
                         #[cfg(not(target_os = "android"))]
-                        let (menu, registry) = menu.build();
+                        // Disabled on Android
                         self.window_menu_actions = registry;
                         #[cfg(target_os = "macos")]
                         {

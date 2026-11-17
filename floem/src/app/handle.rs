@@ -824,8 +824,8 @@ impl ApplicationHandle {
     pub(crate) fn flush_deferred_context_menus(&mut self) {
         let pending = std::mem::take(&mut self.pending_context_menus);
         for item in pending {
-            if let Some(handle) = self.window_handles.get_mut(&item.window_id) {
-                handle.show_context_menu(item.menu.0, item.pos);
+            if let Some(handle) = self.window_handles.get_mut(&item.window_id) 
+                //handle.show_context_menu(item.menu.0, item.pos);
             }
         }
     }

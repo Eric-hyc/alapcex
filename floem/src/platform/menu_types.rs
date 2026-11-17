@@ -30,7 +30,7 @@ pub struct MenuItem;
 #[cfg(target_os = "android")]
 impl MenuItem {
     pub fn new(_text: &str, _accelerator: Option<String>) -> Self { Self }
-    pub fn id(&self) -> &MenuId { &String::new() }
+    pub fn id(&self) -> MenuId { String::new() }
 }
 
 #[cfg(target_os = "android")]
