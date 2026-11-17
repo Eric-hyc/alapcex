@@ -281,3 +281,6 @@ pub mod prelude {
         pointer::{PointerButtonEvent, PointerEvent},
     };
 }
+
+#[cfg(target_os = "android")]
+pub use platform::menu_types::{Menu, Submenu};

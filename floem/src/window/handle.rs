@@ -12,7 +12,6 @@ use crate::platform::menu::{Menu as MudaMenu, MenuId};
 use crate::style::recalc::StyleReason;
 use crate::style::{StyleSelector, StyleSelectors};
 #[cfg(target_os = "windows")]
-#[cfg(not(target_os = "android"))]
 use muda::MenuTheme as MudaMenuTheme;
 
 use crate::platform::{Duration, Instant};
@@ -1218,7 +1217,6 @@ impl WindowHandle {
                         self.paint_state.set_scale(scale);
                     }
                     UpdateMessage::ShowContextMenu { menu, pos } => {
-                        #[cfg(not(target_os = "android"))]
                         // Disabled on Android
                         cx.window_state.context_menu.clear();
                         // Disabled on Android
@@ -1232,9 +1230,7 @@ impl WindowHandle {
                     }
                     UpdateMessage::WindowMenu { menu } => {
                         self.window_menu_actions.clear();
-                        #[cfg(not(target_os = "android"))]
                         // Disabled on Android
-                        self.window_menu_actions = registry;
                         #[cfg(target_os = "macos")]
                         {
                             menu.init_for_nsapp();
@@ -1484,7 +1480,6 @@ impl WindowHandle {
     #[cfg(target_os = "macos")]
     pub(crate) fn show_context_menu(&self, menu: MudaMenu, pos: Option<Point>) {
         use dispatch2::DispatchQueue;
-        #[cfg(not(target_os = "android"))]
         use muda::{
             ContextMenu,
             dpi::{LogicalPosition, Position},
@@ -1522,9 +1517,6 @@ impl WindowHandle {
 
     #[cfg(target_os = "windows")]
     pub(crate) fn show_context_menu(&self, menu: MudaMenu, pos: Option<Point>) {
-#[cfg(not(target_os = "android"))]
-        #[cfg(not(target_os = "android"))]
-        #[cfg(not(target_os = "android"))]
         use muda::{
             ContextMenu,
             dpi::{LogicalPosition, Position},
