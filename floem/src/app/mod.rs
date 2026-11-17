@@ -155,13 +155,13 @@ pub(crate) enum AppUpdateEvent {
     },
     ProfileWindow {
         window_id: WindowId,
-        end_profile: Option<WriteSignal<Option<Rc<Profile>>>>,
+        end_profile: WriteSignal<Option<Rc<Profile>>>,
     },
     RequestTimer {
         timer: Timer,
     },
     RequestAnimationTimer {
-        timer: Timer,
+        timer: TimerToken,
         window_id: WindowId,
     },
     CancelTimer {
@@ -189,16 +189,14 @@ pub(crate) fn add_app_update_event(event: AppUpdateEvent) {
 #[doc(hidden)]
 pub fn take_close_window_event_count(window_id: WindowId) -> usize {
     APP_UPDATE_EVENTS.with(|events| {
-        let mut events = events.borrow_mut();
-        let count = events
-            .iter()
-            .filter(
-                |e| matches!(e, AppUpdateEvent::CloseWindow { window_id: id } if *id == window_id),
-            )
-            .count();
-        events.retain(
-            |e| !matches!(e, AppUpdateEvent::CloseWindow { window_id: id } if *id == window_id),
-        );
+        let mut count = 0;
+        events.borrow_mut().retain(|event| {
+            let matches = matches!(event, AppUpdateEvent::CloseWindow { window_id: id } if *id == window_id);
+            if matches {
+                count += 1;
+            }
+            !matches
+        });
         count
     })
 }
@@ -271,7 +269,20 @@ impl Application {
         Self::new_with_config(AppConfig::default())
     }
     pub fn new_with_config(config: AppConfig) -> Self {
+        // On Android the `AndroidApp` handed to `android_main()` must be wired
+        // into the builder first: `EventLoop::new()` panics without it.
+        #[cfg(not(target_os = "android"))]
         let event_loop = EventLoop::new().expect("can't start the event loop");
+        #[cfg(target_os = "android")]
+        let event_loop = {
+            use winit::platform::android::EventLoopBuilderExtAndroid;
+            let mut builder = EventLoop::builder();
+            let android_app = crate::platform::android::take_android_app().expect(
+                "android_main() must call floem::platform::android::set_android_app() before launch",
+            );
+            builder.with_android_app(android_app);
+            builder.build().expect("can't start the event loop")
+        };
 
         #[cfg(target_os = "macos")]
         delegate::set_app_delegate();
