@@ -31,9 +31,11 @@ jobs:
         with:
           workspaces: "floem -> target"
 
+      # `-p` is required: the `examples/*` glob in default-members does not
+      # select example packages, so the cdylib was never built.
       - name: Build with cargo-ndk
         working-directory: ./floem
-        run: cargo ndk -t arm64-v8a build --release --no-default-features
+        run: cargo ndk -t arm64-v8a build --release --no-default-features -p floem-android-demo
 
       # find is unambiguous: a missing .so fails here with a real message
       # instead of relying on glob expansion behaviour.
@@ -44,9 +46,7 @@ jobs:
           found="$(find floem/target -name 'libfloem_android_demo.so' -type f | head -n 1)"
           if [ -z "$found" ]; then
             echo "::error::libfloem_android_demo.so was not produced"
-            echo "--- .so files that DO exist ---"
-            find floem/target -name '*.so' -type f || true
-            echo "--- crate targets built ---"
+            echo "--- release dir contents ---"
             ls -la floem/target/*/release/ || true
             exit 1
           fi
