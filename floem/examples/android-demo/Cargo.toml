@@ -1,0 +1,14 @@
+[package]
+name = "floem-android-demo"
+version = "0.1.0"
+edition = "2021"
+
+# Floem itself is a library crate, so `cargo ndk build` would only emit an
+# `.rlib`. This crate is the `cdylib` wrapper that actually produces
+# `libfloem_android_demo.so` for `aarch64-linux-android`.
+[lib]
+name = "floem_android_demo"
+crate-type = ["cdylib"]
+
+[dependencies]
+floem = { path = "../..", features = ["vello"] }
