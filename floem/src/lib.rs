@@ -242,7 +242,6 @@ pub use platform::open_file;
 #[cfg(not(target_arch = "wasm32"))]
 pub use platform::save_as;
 pub use platform::{Clipboard, ClipboardError, FileDialogOptions, FileInfo, FileSpec};
-pub use platform::{Menu, SubMenu};
 pub use taffy;
 pub use ui_events;
 pub use understory_focus;
@@ -281,6 +280,11 @@ pub mod prelude {
         pointer::{PointerButtonEvent, PointerEvent},
     };
 }
+
+
+// 统一导出，非 Android 用原本的 menu，Android 用空壳 menu_types
+#[cfg(not(target_os = "android"))]
+pub use platform::{Menu, Submenu};
 
 #[cfg(target_os = "android")]
 pub use platform::menu_types::{Menu, Submenu};
