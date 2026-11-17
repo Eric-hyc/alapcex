@@ -39,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: floem-android-so
-          path: floem/target/aarch64-linux-android/release/*.so
+          path: "floem/target/**/*.so"
