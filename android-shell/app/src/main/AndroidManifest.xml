@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:label="Floem Test"
+        android:hasCode="false"
+        android:allowBackup="false"
+        android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+
+        <!-- 纯原生 Activity：整套 UI 由 libfloem_android_demo.so 渲染 -->
+        <activity
+            android:name="android.app.NativeActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden">
+
+            <!-- 关键：去掉 lib 前缀与 .so 后缀，写错会白屏 -->
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="floem_android_demo" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
