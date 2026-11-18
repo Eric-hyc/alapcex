@@ -37,12 +37,10 @@ jobs:
         with:
           workspaces: "lapce-android -> target"
 
-      # lapce 源码不进仓库：每次现场 clone，再用脚本把它的 floem 依赖
-      # 重定向到本仓库已适配的 floem / floem-editor-core，并剔除 rfd feature。
-      - name: Vendor Lapce and repoint floem
-        run: |
-          git clone --depth 1 https://gitee.com/mirrors/lapce.git lapce
-          python3 scripts/patch_lapce.py
+      # lapce 源码已 vendored 在仓库 lapce/ 目录。这个脚本把它的 floem
+      # 依赖重定向到本仓库已适配的 floem / floem-editor-core，并剔除 rfd feature。
+      - name: Repoint lapce floem deps
+        run: python3 scripts/patch_lapce.py
 
       - name: Build Lapce Android .so
         working-directory: ./lapce-android
