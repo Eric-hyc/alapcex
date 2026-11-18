@@ -12,8 +12,8 @@ use floem::prelude::*;
 
 #[cfg(target_os = "android")]
 fn app_view() -> impl IntoView {
-    label(|| "Hello from Floem on Android".to_string())
-        .style(|s| s.size_full().items_center().justify_center().font_size(24.0))
+    label(|| "test".to_string())
+        .style(|s| s.size_full().items_center().justify_center().font_size(72.0))
 }
 
 /// Entry point invoked by the `android-activity` glue.
