@@ -1,4 +1,4 @@
-name: Android Rust Build
+name: Lapce Android Build
 
 on:
   push:
@@ -18,16 +18,10 @@ jobs:
         with:
           targets: aarch64-linux-android
 
-      - name: Set up Android SDK + NDK
+      - name: Set up Android NDK
         uses: android-actions/setup-android@v4
         with:
-          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+          packages: ''
 
       - name: Install cargo-ndk
         run: cargo install cargo-ndk
@@ -35,52 +29,46 @@ jobs:
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2
         with:
-          workspaces: "floem -> target"
+          workspaces: "lapce-android -> target"
 
-      # `-p` is required: the `examples/*` glob in default-members does not
-      # select example packages, so the cdylib was never built.
-      - name: Build with cargo-ndk
-        working-directory: ./floem
-        run: cargo ndk -t arm64-v8a build --release --no-default-features -p floem-android-demo
+      # lapce 源码不进仓库：每次现场 clone，再把它的 floem 依赖重定向到本仓库
+      # 已适配的 floem / floem-editor-core，并剔除 rfd-async-std feature。
+      - name: Vendor Lapce and repoint floem
+        run: |
+          git clone --depth 1 https://gitee.com/mirrors/lapce.git lapce
+          python3 - <<'PY'
+import re
+p = 'lapce/Cargo.toml'
+s = open(p).read()
+s = re.sub(
+    r'\[workspace\.dependencies\.floem\]\n# path = "[^"]*"\ngit = "https://github\.com/lapce/floem"\nrev = "[^"]+"\n',
+    '[workspace.dependencies.floem]\npath = "../floem"\n', s)
+s = re.sub(
+    r'\[workspace\.dependencies\.floem-editor-core\]\n# path = "[^"]*"\ngit = "https://github\.com/lapce/floem"\nrev = "[^"]+"\n',
+    '[workspace.dependencies.floem-editor-core]\npath = "../floem/editor-core"\n', s)
+s = s.replace(', "rfd-async-std"', '')
+open(p, 'w').write(s)
+print("=== patched floem/rfd lines ===")
+for line in open(p):
+    if 'floem' in line or 'rfd' in line:
+        print(line, end='')
+PY
 
-      - name: Locate the Android .so
+      - name: Build Lapce Android .so
+        working-directory: ./lapce-android
+        run: cargo ndk -t arm64-v8a build --release
+
+      - name: Verify the .so
         run: |
           set -euo pipefail
-          mkdir -p dist
-          found="$(find floem/target -name 'libfloem_android_demo.so' -type f | head -n 1)"
-          if [ -z "$found" ]; then
-            echo "::error::libfloem_android_demo.so was not produced"
-            ls -la floem/target/*/release/ || true
-            exit 1
-          fi
-          cp "$found" dist/
-          file dist/libfloem_android_demo.so
-          readelf -h dist/libfloem_android_demo.so | grep -E 'Class|Machine'
+          found="$(find lapce-android/target -name 'liblapce_android.so' -type f | head -n 1)"
+          [ -n "$found" ] || { echo "::error::liblapce_android.so not produced"; exit 1; }
+          file "$found"
+          readelf -h "$found" | grep -E 'Class|Machine'
 
       - name: Upload .so artifact
         uses: actions/upload-artifact@v4
         with:
-          name: floem-android-so
-          path: dist/*.so
-          if-no-files-found: error
-
-      - name: Install Gradle
-        run: |
-          set -euo pipefail
-          curl -fsSL -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-8.9-bin.zip
-          sudo unzip -q -o /tmp/gradle.zip -d /opt
-          echo /opt/gradle-8.9/bin >> "$GITHUB_PATH"
-
-      - name: Assemble APK
-        run: |
-          set -euo pipefail
-          mkdir -p android-shell/app/src/main/jniLibs/arm64-v8a
-          cp dist/libfloem_android_demo.so android-shell/app/src/main/jniLibs/arm64-v8a/
-          gradle -p android-shell assembleDebug --no-daemon --stacktrace
-
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: floem-android-apk
-          path: android-shell/app/build/outputs/apk/debug/*.apk
+          name: lapce-android-so
+          path: lapce-android/target/*/release/liblapce_android.so
           if-no-files-found: error
