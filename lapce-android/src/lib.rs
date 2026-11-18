@@ -15,8 +15,8 @@ fn lapce_android_view() -> impl IntoView {
 
 #[cfg(target_os = "android")]
 #[no_mangle]
-pub extern "C" fn android_main(app: AndroidApp) {
+fn android_main(app: AndroidApp) {
     floem::platform::android::set_android_app(app);
-    // In the future, we will call lapce::run() here
+    // TODO: wire up the real lapce main loop here.
     floem::launch(lapce_android_view);
 }
