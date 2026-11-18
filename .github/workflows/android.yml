@@ -1,5 +1,6 @@
 name: Android Rust Build
 
+# re-run: 2026-11-17T14:00Z (refresh expired artifact, no logic change)
 on:
   push:
     branches: [ "main" ]
