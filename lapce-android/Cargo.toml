@@ -10,4 +10,3 @@ crate-type = ["cdylib"]
 [dependencies]
 floem = { path = "../floem", features = ["editor", "serde", "default-image-formats"] }
 lapce-core = { path = "../lapce/lapce-core" }
-# Add other necessary lapce crates here as we discover them
