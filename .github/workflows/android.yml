@@ -31,28 +31,12 @@ jobs:
         with:
           workspaces: "lapce-android -> target"
 
-      # lapce 源码不进仓库：每次现场 clone，再把它的 floem 依赖重定向到本仓库
-      # 已适配的 floem / floem-editor-core，并剔除 rfd-async-std feature。
+      # lapce 源码不进仓库：每次现场 clone，再用脚本把它的 floem 依赖
+      # 重定向到本仓库已适配的 floem / floem-editor-core，并剔除 rfd feature。
       - name: Vendor Lapce and repoint floem
         run: |
           git clone --depth 1 https://gitee.com/mirrors/lapce.git lapce
-          python3 - <<'PY'
-import re
-p = 'lapce/Cargo.toml'
-s = open(p).read()
-s = re.sub(
-    r'\[workspace\.dependencies\.floem\]\n# path = "[^"]*"\ngit = "https://github\.com/lapce/floem"\nrev = "[^"]+"\n',
-    '[workspace.dependencies.floem]\npath = "../floem"\n', s)
-s = re.sub(
-    r'\[workspace\.dependencies\.floem-editor-core\]\n# path = "[^"]*"\ngit = "https://github\.com/lapce/floem"\nrev = "[^"]+"\n',
-    '[workspace.dependencies.floem-editor-core]\npath = "../floem/editor-core"\n', s)
-s = s.replace(', "rfd-async-std"', '')
-open(p, 'w').write(s)
-print("=== patched floem/rfd lines ===")
-for line in open(p):
-    if 'floem' in line or 'rfd' in line:
-        print(line, end='')
-PY
+          python3 scripts/patch_lapce.py
 
       - name: Build Lapce Android .so
         working-directory: ./lapce-android
