@@ -10,3 +10,6 @@ crate-type = ["cdylib"]
 [dependencies]
 floem = { path = "../floem", features = ["editor", "serde", "default-image-formats"] }
 lapce-core = { path = "../lapce/lapce-core" }
+# The real Lapce UI lives here; pulling it in now to surface all Android
+# compile issues in one go.
+lapce-app = { path = "../lapce/lapce-app" }
