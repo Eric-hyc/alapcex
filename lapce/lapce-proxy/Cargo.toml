@@ -60,9 +60,11 @@ wasmtime      = "14.0.0"
 wasmtime-wasi = "14.0.0"
 wasi-common   = "14.0.0"
 
+# Vendored so we can fix the wasmtime::Error trait gap on Android:
+# wasmtime::Error does not impl std::error::Error on aarch64-linux-android,
+# breaking the `?` -> anyhow conversions inside this crate.
 [dependencies.wasi-experimental-http-wasmtime]
-git = "https://github.com/lapce/wasi-experimental-http"
-# path = "../../wasi-experimental-http/crates/wasi-experimental-http-wasmtime"
+path = "../../wasi-experimental-http/crates/wasi-experimental-http-wasmtime"
 
 [target.'cfg(target_os = "macos")'.dependencies.locale_config]
 git    = "https://github.com/lapce/locale_config.git"
