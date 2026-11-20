@@ -60,11 +60,9 @@ wasmtime      = "14.0.0"
 wasmtime-wasi = "14.0.0"
 wasi-common   = "14.0.0"
 
-# wasi-experimental-http-wasmtime fails to build against wasmtime 14 on
-# aarch64-linux-android (wasmtime::Error no longer implements std::error::Error).
-# Plugins are not needed for the first Android bring-up, so skip it there.
-[target.'cfg(not(target_os = "android"))'.dependencies.wasi-experimental-http-wasmtime]
+[dependencies.wasi-experimental-http-wasmtime]
 git = "https://github.com/lapce/wasi-experimental-http"
+# path = "../../wasi-experimental-http/crates/wasi-experimental-http-wasmtime"
 
 [target.'cfg(target_os = "macos")'.dependencies.locale_config]
 git    = "https://github.com/lapce/locale_config.git"
