@@ -10,6 +10,15 @@ crate-type = ["cdylib"]
 [dependencies]
 floem = { path = "../floem", features = ["editor", "serde", "default-image-formats"] }
 lapce-core = { path = "../lapce/lapce-core" }
-# The real Lapce UI lives here; pulling it in now to surface all Android
-# compile issues in one go.
+# The real Lapce UI lives here.
 lapce-app = { path = "../lapce/lapce-app" }
+
+# lapce-android is a SEPARATE workspace from lapce/, so lapce's
+# [patch.crates-io] does NOT apply here. Without these, transitive deps
+# resolve to the latest crates.io versions:
+#   - lsp-types renamed `Url` -> `Uri`, breaking psp-types and lapce's
+#     own `Url` usage. Pin it to the lapce fork (which keeps `Url`).
+#   - regalloc2 must match the rev wasmtime/cranelift expect.
+[patch.crates-io]
+lsp-types = { git = "https://github.com/lapce/lsp-types", rev = "feaa1e2ec80975c9dadd400a238ceacf071058e6" }
+regalloc2 = { rev = "5d79e12d0a93b10fc181f4da409b4671dd365228", git = "https://github.com/bytecodealliance/regalloc2" }
