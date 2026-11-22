@@ -32,19 +32,32 @@ open(p, 'w').write(s)
 
 # ---------------------------------------------------------------------------
 # wasi-experimental-http-wasmtime: wasmtime::Error does NOT implement
-# std::error::Error on aarch64-linux-android, so the five
-#   linker.func_wrap( ... )?;
-# calls cannot convert into anyhow::Error. Map the error to a string first.
-# The crate already uses `anyhow::format_err!`, so it is in scope.
+# std::error::Error on aarch64-linux-android不苟, so only the 5
+# `linker.func_wrap(...)?` calls (returning wasmtime::Error, in add_to_linker)
+# need the error mapped to anyhow. The memory.write/block_on calls in
+# HostCalls/request return HttpError and must be left as plain `?`.
 q = 'wasi-experimental-http/crates/wasi-experimental-http-wasmtime/src/lib.rs'
 w = open(q).read()
-OLD = '        )?;'
-NEW = ('        ).map_err(|e| '
-       'anyhow::format_err!("wasi experimental http: {e}"))?;')
-n = w.count(OLD)
-w = w.replace(OLD, NEW)
+
+# 1. Undo any previous over-broad .map_err replacement (both spellings).
+for pat in (
+    '        ).map_err(|e| anyhow::format_err!("wasi experimental http: {}", e))?;',
+    '        ).map_err(|e| anyhow::format_err!("wasi experimental http: {e}"))?;',
+):
+    w = w.replace(pat, '        )?;')
+
+# 2. Only the func_wrap sites: their closing `)?;` is preceded by a `},` line.
+w = w.replace(
+    '            },\n        )?;',
+    '            },\n        ).map_err(|e| anyhow::format_err!("wasi experimental http: {}", e))?;')
+
+# 3. func_wrap needs T: 'static on android.
+w = w.replace(
+    '    pub fn add_to_linker<T>(',
+    "    pub fn add_to_linker<T: 'static>(")
+
 open(q, 'w').write(w)
-print(f'=== patched {n} func_wrap ? sites in wasi lib.rs ===')
+print(f'=== patched wasi lib.rs; func_wrap count={w.count("wasi experimental http")} ===')
 
 print('=== patched floem/rfd/xi-rope lines ===')
 for line in open(p):
