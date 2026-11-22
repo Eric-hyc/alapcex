@@ -57,7 +57,7 @@ t = t.replace('trash = "3.0.6"\n', '')
 t = t.rstrip('\n') + (
     '\n\n# trash has no Android backend; dispatch.rs adapts the call there\n'
     "[target.'cfg(not(target_os = \"android\"))'.dependencies.trash]\n"
-    'trash = "3.0.6"\n')
+    'version = "3.0.6"\n')
 open(r, 'w').write(t)
 
 d = 'lapce/lapce-proxy/src/dispatch.rs'
